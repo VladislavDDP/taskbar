@@ -22,13 +22,31 @@ function onPageLoaded() {
         for (const button of deleteButtons) {
             listenDeleteTodo(button)
         }
+
+        const progressValue = document.querySelectorAll(".progress-value")
+        let i = 0
+        const lessButtons = document.querySelectorAll(".less")
+        for (const less_btn of lessButtons) {
+            reduceProgress(less_btn, progressValue[i])
+            i++
+        }
+        i = 0
+        const moreButtons = document.querySelectorAll(".more")
+        for (const more_btn of moreButtons) {
+            raiseProgress(more_btn, progressValue[i])
+            i++
+        }
     }
 
     function createTodo() {
         const li = document.createElement("li")
         const textSpan = document.createElement("span")
         textSpan.classList.add("todo-text")
-        const newTodo = input.value
+        let toDoText = ''
+        if (input.value.length > 10){
+            toDoText = input.value.substr(0, 10)
+        } else toDoText = input.value
+        const newTodo = toDoText
         textSpan.append(newTodo)
 
         const deleteBtn = document.createElement("span")
@@ -42,7 +60,7 @@ function onPageLoaded() {
         const less_btn = document.createElement("button")
         less_btn.classList.add("less")
         less_btn.classList.add("btn")
-        less_btn.textContent = '-'
+        less_btn.textContent = '<'
 
         const progress = document.createElement("div")
         progress.classList.add("progress")
@@ -55,16 +73,14 @@ function onPageLoaded() {
         const more_btn = document.createElement("button")
         more_btn.classList.add("more")
         more_btn.classList.add("btn")
-        more_btn.textContent = '+';
+        more_btn.textContent = '>';
 
         progressContainer.appendChild(less_btn)
         progressContainer.appendChild(progress)
         progressContainer.appendChild(more_btn)
 
-        const testBox = document.querySelector('.test')
-        testBox.append(progressContainer)
-
-        ul.appendChild(li).append(textSpan, deleteBtn)
+        // progressContainer.style.position = 'relative'
+        ul.appendChild(li).append(textSpan, progressContainer, deleteBtn)
         input.value = ""
         listenDeleteTodo(deleteBtn)
         reduceProgress(less_btn, progressValue)
