@@ -1,4 +1,5 @@
 function onPageLoaded() {
+    // Get text from input
     const input = document.querySelector("input[type='text']")
     const ul = document.querySelector("ul.todos")
 
@@ -13,6 +14,7 @@ function onPageLoaded() {
         localStorage.removeItem('todos', ul.innerHTML)
     })
 
+    // Load tasks from local storage 
     function loadTodos() {
         const data = localStorage.getItem("todos")
         if (data) {
@@ -23,28 +25,26 @@ function onPageLoaded() {
             listenDeleteTodo(button)
         }
 
+        // Reset button`s actions and progress
         const progressValue = document.querySelectorAll(".progress-value")
-        let i = 0
         const lessButtons = document.querySelectorAll(".less")
-        for (const less_btn of lessButtons) {
-            reduceProgress(less_btn, progressValue[i])
-            i++
+        for (var i = 0; i < lessButtons.length; i++) {
+            reduceProgress(lessButtons[i], progressValue[i])
         }
-        i = 0
         const moreButtons = document.querySelectorAll(".more")
-        for (const more_btn of moreButtons) {
-            raiseProgress(more_btn, progressValue[i])
-            i++
+        for (var i = 0; i < lessButtons.length; i++) {
+            raiseProgress(moreButtons[i], progressValue[i])
         }
     }
 
+    // Genetate content dynamically
     function createTodo() {
         const li = document.createElement("li")
         const textSpan = document.createElement("span")
         textSpan.classList.add("todo-text")
         let toDoText = ''
-        if (input.value.length > 10){
-            toDoText = input.value.substr(0, 10)
+        if (input.value.length > 20){
+            toDoText = input.value.substr(0, 20)
         } else toDoText = input.value
         const newTodo = toDoText
         textSpan.append(newTodo)
@@ -55,12 +55,15 @@ function onPageLoaded() {
         icon.classList.add("fas", "fa-trash-alt")
         deleteBtn.appendChild(icon)
 
+        // A huge block with progressbar (buttons < > and progress line)
         const progressContainer = document.createElement("div")
         progressContainer.classList.add("progress-container")
         const less_btn = document.createElement("button")
-        less_btn.classList.add("less")
-        less_btn.classList.add("btn")
-        less_btn.textContent = '<'
+        less_btn.classList.add("less", "btn")
+
+        const textDown = document.createElement("i") 
+        textDown.classList.add("fas", "fa-chevron-left")
+        less_btn.appendChild(textDown)
 
         const progress = document.createElement("div")
         progress.classList.add("progress")
@@ -71,25 +74,28 @@ function onPageLoaded() {
         progress.appendChild(progressValue)
 
         const more_btn = document.createElement("button")
-        more_btn.classList.add("more")
-        more_btn.classList.add("btn")
-        more_btn.textContent = '>';
+        more_btn.classList.add("more", "btn")
+
+        const textUp = document.createElement("i") 
+        textUp.classList.add("fas", "fa-chevron-right")
+        more_btn.appendChild(textUp)
 
         progressContainer.appendChild(less_btn)
         progressContainer.appendChild(progress)
         progressContainer.appendChild(more_btn)
 
-        // progressContainer.style.position = 'relative'
         ul.appendChild(li).append(textSpan, progressContainer, deleteBtn)
         input.value = ""
+
+        // Add events on buttons (delete task, update progress line) 
         listenDeleteTodo(deleteBtn)
         reduceProgress(less_btn, progressValue)
         raiseProgress(more_btn, progressValue)
     }
 
     function onClickTodo(event) {
-        if (event.target.tagName === "LI") {
-            event.target.classList.toggle("checked")
+        if (event.target.tagName === "SPAN") {
+            event.target.innerHTML = prompt('Change text:')
         }
     }
 
@@ -100,12 +106,26 @@ function onPageLoaded() {
         })
     }
 
+    function getToDoTextComponent(event) {
+        var textComponent = event.target.parentElement.parentElement
+        if (textComponent.tagName === 'DIV') textComponent = textComponent.parentElement
+        textComponent = textComponent.querySelector('.todo-text')
+        return textComponent
+    }
+
     function reduceProgress(btn, element) {
         btn.addEventListener("click", (event) => {
             let temp = parseInt(element.style.width)     
             temp? temp : temp = 0
             const counter = temp - 20 
             element.style.width = counter < 0? 0 : counter + '%' 
+
+            var textComponent = getToDoTextComponent(event)
+
+            if (counter < 90){
+                element.style.background = 'rgb(245, 129, 51)'
+                textComponent.classList.remove('checked')
+            }
         })
     }
 
@@ -115,6 +135,14 @@ function onPageLoaded() {
             temp? temp : temp = 0
             const counter = temp + 20 
             element.style.width = counter > 100? 100 : counter + '%' 
+
+            var textComponent = getToDoTextComponent(event)
+
+            if (counter > 90){
+                if (!textComponent.className.includes("checked"))
+                    textComponent.classList.toggle("checked")
+                element.style.background = 'green'
+            }
         })
     }
 
@@ -125,8 +153,9 @@ function onPageLoaded() {
         }
     })
 
-    ul.addEventListener("click", onClickTodo)
-
+    ul.addEventListener("dblclick", onClickTodo)
+    
+    // get tasks from local storage
     loadTodos()
 }
 
