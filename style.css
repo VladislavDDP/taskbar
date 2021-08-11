@@ -5,8 +5,6 @@ body {
   flex-direction: column;
   align-items: center;
   height: 100vh;
-  width: 97vw;
-  text-align: center;
 }
 
 /* Title and navbar */
@@ -29,7 +27,8 @@ h2 {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
+  width: 70%;
+  margin-left: 50px;
 }
 
 .progress {
@@ -41,7 +40,7 @@ h2 {
   padding: 0 5px;
   display: flex;
   height: 40px;
-  width: 60%;
+  width: 70%;
 }
 
 .progress-value {
@@ -75,7 +74,7 @@ html {
 }
 
 .container {
-  width: 100vw;
+  width: 100%;
   min-height: 50%;
   height: 100%;
   padding-bottom: 40px;
@@ -151,6 +150,7 @@ button:hover {
   margin: 0 auto;
   padding: 0 30px;
   max-width: 800px;
+  min-width: 300px;
   height: 100%;
   position: relative;
 }
@@ -164,7 +164,8 @@ button:hover {
 
 .todos li {
   height: 60px;
-  line-height: 50px;
+  margin-bottom: 20px;
+  line-height: 20px;
   cursor: pointer;
   font-size: 20px;
   display: flex;
@@ -172,13 +173,15 @@ button:hover {
 }
 
 .todos li span.todo-text {
+  margin-top: 15px;
+  margin-bottom: 15px;
   width: 30%;
   color: #fff;
-  padding: 0 5px;
 }
 
 .todos li:hover span.todo-trash {
   width: 50px;
+  margin-top: 15px;
   opacity: 1;
 }
 
